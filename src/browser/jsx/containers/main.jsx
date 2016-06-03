@@ -3,7 +3,7 @@ import React from 'react';
 import {createStore, applyMiddleware} from 'redux';
 import {Provider} from 'react-redux';
 import thunk from 'redux-thunk';
-import applicationActions from '../actions/application';
+
 import FullScreen from '../components/full-screen/full-screen.jsx';
 import StudioLayout from './studio-layout/studio-layout.jsx';
 import Sidebar from '../components/sidebar/sidebar.jsx';
@@ -11,7 +11,9 @@ import ModalDialogContainer from '../components/modal-dialog/modal-dialog-contai
 import NotificationsContainer from '../components/notifications/notifications-container.jsx';
 import rootReducer from '../reducers';
 import ipcDispatcher from '../services/ipc-dispatcher';
+import applicationActions from '../actions/application';
 import kernelActions from '../actions/kernel';
+import dialogActions from '../actions/dialogs';
 
 const createStoreWithMiddleware = applyMiddleware(thunk)(createStore),
   store = createStoreWithMiddleware(rootReducer);
@@ -21,6 +23,7 @@ ipcDispatcher(store.dispatch);
 // find the kernel immediately
 store.dispatch(kernelActions.detectKernel());
 store.dispatch(applicationActions.checkForUpdates());
+store.dispatch(dialogActions.showRegisterRodeo());
 
 // log every change to the store (this has performance implications, of course).
 store.subscribe(_.debounce(() => console.log('store', store.getState()), 500));
